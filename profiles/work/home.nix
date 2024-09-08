@@ -12,13 +12,10 @@
               (./. + "../../../user/wm"+("/"+userSettings.wm+"/"+userSettings.wm)+".nix") # My window manager selected from flake
               ../../user/shell/sh.nix # My zsh and bash config
               ../../user/shell/cli-collection.nix # Useful CLI apps
-              ../../user/app/doom-emacs/doom.nix # My doom emacs config
-              #../../user/app/emacsng # Me experimenting with emacsng and a vanilla config
-              ../../user/app/ranger/ranger.nix # My ranger file manager config
+	      ../../user/app/ranger/ranger.nix # My ranger file manager config
               ../../user/app/git/git.nix # My git config
-              ../../user/app/keepass/keepass.nix # My password manager
               (./. + "../../../user/app/browser"+("/"+userSettings.browser)+".nix") # My default browser selected from flake
-              ../../user/app/virtualization/virtualization.nix # Virtual machines
+              #../../user/app/virtualization/virtualization.nix # Virtual machines
               #../../user/app/flatpak/flatpak.nix # Flatpaks
               ../../user/style/stylix.nix # Styling and themes for my apps
               ../../user/lang/cc/cc.nix # C and C++ tools
@@ -33,33 +30,23 @@
     # Core
     zsh
     alacritty
-    brave
-    qutebrowser
     git
     syncthing
 
     # Office
-    nextcloud-client
     libreoffice-fresh
     mate.atril
     openboard
     xournalpp
     gnome.adwaita-icon-theme
     shared-mime-info
-    glib
-    newsflash
-    foliate
-    gnome.nautilus
     gnome.gnome-calendar
     gnome.seahorse
     gnome.gnome-maps
     openvpn
     protonmail-bridge
     texliveSmall
-    numbat
     element-desktop-wayland
-
-    openai-whisper-cpp
 
     wine
     bottles
@@ -109,13 +96,11 @@
 
     # Media
     gimp
-    krita
     inkscape
     (pkgs-stable.lollypop.override { youtubeSupport = false; })
     vlc
     mpv
     yt-dlp
-    blender-hip
     # cura is moderately broken on wayland, so use xwayland
     (pkgs-stable.cura.overrideAttrs (oldAttrs: {
       postInstall = oldAttrs.postInstall + ''cp -rf ${(pkgs.makeDesktopItem {
@@ -158,19 +143,15 @@
         curaengine_stable
       ];
     })
-    obs-studio
     ffmpeg
     (pkgs.writeScriptBin "kdenlive-accel" ''
       #!/bin/sh
       DRI_PRIME=0 kdenlive "$1"
     '')
-    movit
     mediainfo
     libmediainfo
     audio-recorder
     gnome.cheese
-    ardour
-    rosegarden
     tenacity
 
     # Various dev packages
@@ -178,7 +159,6 @@
     texinfo
     libffi zlib
     nodePackages.ungit
-    ventoy
   ]) ++ ([ pkgs-kdenlive.kdenlive ]);
 
   home.file.".local/share/pixmaps/nixos-snowflake-stylix.svg".source =

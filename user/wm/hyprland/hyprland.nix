@@ -49,7 +49,7 @@ in
 
       exec-once = hyprprofile Default
 
-      exec-once = emacs --daemon
+      #exec-once = emacs --daemon
       exec-once = ydotoold
       #exec-once = STEAM_FRAME_FORCE_CLOSE=1 steam -silent
       exec-once = nm-applet
@@ -350,10 +350,11 @@ in
        bind=SUPER,P,exec,keepmenu
        bind=SUPERSHIFT,P,exec,hyprprofile-dmenu
 
-       # 3 monitor setup
-       monitor=eDP-1,1920x1080@300,900x1080,1
-       monitor=HDMI-A-1,1920x1080,1920x0,1
-       monitor=DP-1,1920x1080,0x0,1
+       # Laptop
+       monitor=eDP-1,preferred,auto,1.5
+       
+       #monitor=HDMI-A-1,1920x1080,1920x0,1
+       #monitor=DP-1,1920x1080,0x0,1
 
        # hdmi tv
        #monitor=eDP-1,1920x1080,1920x0,1
@@ -364,7 +365,7 @@ in
        #monitor=HDMI-A-1,1920x1200,0x0,1
 
        xwayland {
-         force_zero_scaling = true
+         force_zero_scaling = false
        }
 
        binds {
@@ -372,7 +373,7 @@ in
        }
 
        input {
-         kb_layout = us
+         kb_layout = gb
          kb_options = caps:escape
          repeat_delay = 350
          repeat_rate = 50
