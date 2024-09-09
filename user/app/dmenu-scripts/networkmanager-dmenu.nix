@@ -12,7 +12,7 @@
     list_saved = True
 
     [editor]
-    terminal = alacritty
+    terminal = kitty
     # gui_if_available = <True or False> (Default: True)
   '';
 }

@@ -90,7 +90,6 @@
     wget
     zsh
     git
-    cryptsetup
     home-manager
     wpa_supplicant
     (pkgs.writeScriptBin "comma" ''

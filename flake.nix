@@ -27,7 +27,6 @@
         # window manager type (hyprland or x11) translator
         wmType = if ((wm == "hyprland") || (wm == "plasma")) then "wayland" else "x11";
         browser = "floorp"; # Default browser; must select one from ./user/app/browser/
-        spawnBrowser = if ((browser == "qutebrowser") && (wm == "hyprland")) then "qutebrowser-hyprprofile" else (if (browser == "qutebrowser") then "qutebrowser --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=4" else browser); # Browser spawn command must be specail for qb, since it doesn't gpu accelerate by default (why?)
         defaultRoamDir = "Personal.p"; # Default org roam directory relative to ~/Org
         term = "kitty"; # Default terminal command;
         font = "JetBrainsMonoNerdFont"; # Selected font
@@ -37,15 +36,12 @@
         # generates a command that can be used to spawn editor inside a gui
         # EDITOR and TERM session variables must be set in home.nix or other module
         # I set the session variable SPAWNEDITOR to this in my home.nix for convenience
-        spawnEditor = if (editor == "emacsclient") then
-                        "emacsclient -c -a 'emacs'"
-                      else
-                        (if ((editor == "vim") ||
-                             (editor == "nvim") ||
-                             (editor == "nano")) then
-                               "exec " + term + " -e " + editor
-                         else
-                           editor);
+        spawnEditor = ( if ((editor == "vim") ||
+                            (editor == "nvim") ||
+                            (editor == "nano")) then
+                                "exec " + term + " -e " + editor
+                        else
+                            editor);
       };
 
       # create patched nixpkgs
@@ -138,7 +134,6 @@
           extraSpecialArgs = {
             # pass config variables from above
             inherit pkgs-stable;
-            inherit pkgs-emacs;
             inherit pkgs-kdenlive;
             inherit pkgs-nwg-dock-hyprland;
             inherit systemSettings;
@@ -162,20 +157,6 @@
             inherit userSettings;
             inherit inputs;
           };
-        };
-      };
-      nixOnDroidConfigurations = {
-        inherit pkgs;
-        default = inputs.nix-on-droid.lib.nixOnDroidConfiguration {
-          modules = [ ./profiles/nix-on-droid/configuration.nix ];
-        };
-        extraSpecialArgs = {
-          # pass config variables from above
-          inherit pkgs-stable;
-          inherit pkgs-emacs;
-          inherit systemSettings;
-          inherit userSettings;
-          inherit inputs;
         };
       };
 
@@ -208,7 +189,6 @@
     };
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-24.05";
-    emacs-pin-nixpkgs.url = "nixpkgs/f72123158996b8d4449de481897d855bc47c7bf6";
     kdenlive-pin-nixpkgs.url = "nixpkgs/cfec6d9203a461d9d698d8a60ef003cac6d0da94";
     nwg-dock-hyprland-pin-nixpkgs.url = "nixpkgs/2098d845d76f8a21ae4fe12ed7c7df49098d3f15";
 
@@ -217,12 +197,6 @@
 
     home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
-
-    nix-on-droid = {
-      url = "github:nix-community/nix-on-droid/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager-unstable";
-    };
 
     hyprland = {
       type = "git";
@@ -253,25 +227,9 @@
     kwin-effects-forceblur.url = "github:taj-ny/kwin-effects-forceblur";
     kwin-effects-forceblur.inputs.nixpkgs.follows = "nixpkgs";
 
-    # FIXME emacsng doesn't build or dumps core
-    #emacsng.url = "github:emacs-ng/emacs-ng/58fcf8c";
-    #emacsng.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
-    nix-doom-emacs.inputs.nixpkgs.follows = "emacs-pin-nixpkgs";
-
     nix-straight.url = "github:librephoenix/nix-straight.el/pgtk-patch";
     nix-straight.flake = false;
-    nix-doom-emacs.inputs.nix-straight.follows = "nix-straight";
 
-    eaf = {
-      url = "github:emacs-eaf/emacs-application-framework";
-      flake = false;
-    };
-    eaf-browser = {
-      url = "github:emacs-eaf/eaf-browser";
-      flake = false;
-    };
     org-nursery = {
       url = "github:chrisbarrett/nursery";
       flake = false;
@@ -286,10 +244,6 @@
     };
     org-timeblock = {
       url = "github:ichernyshovvv/org-timeblock";
-      flake = false;
-    };
-    org-krita = {
-      url = "github:librephoenix/org-krita";
       flake = false;
     };
     org-xournalpp = {

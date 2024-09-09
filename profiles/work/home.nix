@@ -35,17 +35,13 @@
 
     # Office
     libreoffice-fresh
-    mate.atril
-    openboard
+    gnome.evince
     xournalpp
     gnome.adwaita-icon-theme
     shared-mime-info
     gnome.gnome-calendar
-    gnome.seahorse
-    gnome.gnome-maps
     openvpn
     protonmail-bridge
-    texliveSmall
     element-desktop-wayland
 
     wine
@@ -120,7 +116,6 @@
     }))
     (pkgs.writeShellScriptBin "curax" ''env QT_QPA_PLATFORM=xcb ${pkgs-stable.cura}/bin/cura'')
     (pkgs-stable.curaengine_stable)
-    openscad
     (stdenv.mkDerivation {
       name = "cura-slicer";
       version = "0.0.7";
@@ -152,11 +147,8 @@
     libmediainfo
     audio-recorder
     gnome.cheese
-    tenacity
 
     # Various dev packages
-    sshfs
-    texinfo
     libffi zlib
     nodePackages.ungit
   ]) ++ ([ pkgs-kdenlive.kdenlive ]);
@@ -177,21 +169,21 @@
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
-    music = "${config.home.homeDirectory}/Media/Music";
-    videos = "${config.home.homeDirectory}/Media/Videos";
-    pictures = "${config.home.homeDirectory}/Media/Pictures";
-    templates = "${config.home.homeDirectory}/Templates";
+    music = "${config.home.homeDirectory}/Documents/Media/Music";
+    videos = "${config.home.homeDirectory}/Documents/Media/Videos";
+    pictures = "${config.home.homeDirectory}/Documents/Media/Pictures";
+    templates = "${config.home.homeDirectory}/Documents/Templates";
     download = "${config.home.homeDirectory}/Downloads";
     documents = "${config.home.homeDirectory}/Documents";
     desktop = null;
     publicShare = null;
     extraConfig = {
       XDG_DOTFILES_DIR = "${config.home.homeDirectory}/.dotfiles";
-      XDG_ARCHIVE_DIR = "${config.home.homeDirectory}/Archive";
-      XDG_VM_DIR = "${config.home.homeDirectory}/Machines";
-      XDG_ORG_DIR = "${config.home.homeDirectory}/Org";
-      XDG_PODCAST_DIR = "${config.home.homeDirectory}/Media/Podcasts";
-      XDG_BOOK_DIR = "${config.home.homeDirectory}/Media/Books";
+      XDG_ARCHIVE_DIR = "${config.home.homeDirectory}/Documents/Archive";
+      XDG_VM_DIR = "${config.home.homeDirectory}/Documents/Machines";
+      XDG_ORG_DIR = "${config.home.homeDirectory}/Documents/Org";
+      XDG_PODCAST_DIR = "${config.home.homeDirectory}/Documents/Media/Podcasts";
+      XDG_BOOK_DIR = "${config.home.homeDirectory}/Documents/Media/Books";
     };
   };
   xdg.mime.enable = true;
