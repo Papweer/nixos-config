@@ -36,7 +36,7 @@ in
   };
 
   home.packages = with pkgs; [
-    disfetch lolcat cowsay onefetch
+    disfetch lolcat onefetch
     gnugrep gnused
     bat eza bottom fd bc
     direnv nix-direnv

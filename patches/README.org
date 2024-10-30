@@ -10,4 +10,3 @@ Here is a list of patches in this directory, along with a more detailed descript
 
 | Patch                        | Reason                                                                                       |
 |------------------------------+----------------------------------------------------------------------------------------------|
-| [[./emacs-no-version-check.patch][emacs-no-version-check.patch]] | [[https://github.com/NixOS/nixpkgs/commit/35ccb9db3f4f0872f05d175cf53d0e1f87ff09ea][35ccb9d]] breaks my nix-doom-emacs install by preventing home-manager from building. This patches undoes this commit. |

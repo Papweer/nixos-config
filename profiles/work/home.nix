@@ -12,16 +12,16 @@
               (./. + "../../../user/wm"+("/"+userSettings.wm+"/"+userSettings.wm)+".nix") # My window manager selected from flake
               ../../user/shell/sh.nix # My zsh and bash config
               ../../user/shell/cli-collection.nix # Useful CLI apps
-	      ../../user/app/ranger/ranger.nix # My ranger file manager config
               ../../user/app/git/git.nix # My git config
               (./. + "../../../user/app/browser"+("/"+userSettings.browser)+".nix") # My default browser selected from flake
+              ../../user/style/stylix.nix # Styling and themes for my apps
+              ../../user/pkgs/blockbench.nix # Blockbench
+              ../../user/hardware/bluetooth.nix # Bluetooth
+              #../../user/app/ranger/ranger.nix # My ranger file manager config
               #../../user/app/virtualization/virtualization.nix # Virtual machines
               #../../user/app/flatpak/flatpak.nix # Flatpaks
-              ../../user/style/stylix.nix # Styling and themes for my apps
-              ../../user/lang/cc/cc.nix # C and C++ tools
-              ../../user/lang/godot/godot.nix # Game development
-              #../../user/pkgs/blockbench.nix # Blockbench ## marked as insecure
-              ../../user/hardware/bluetooth.nix # Bluetooth
+              #../../user/lang/cc/cc.nix # C and C++ tools
+              #../../user/lang/godot/godot.nix # Game development
             ];
 
   home.stateVersion = "22.11"; # Please read the comment before changing.
@@ -34,6 +34,8 @@
     syncthing
 
     # Office
+    kdePackages.dolphin
+    vscode
     libreoffice-fresh
     gnome.evince
     xournalpp
@@ -93,7 +95,6 @@
     # Media
     gimp
     inkscape
-    (pkgs-stable.lollypop.override { youtubeSupport = false; })
     vlc
     mpv
     yt-dlp

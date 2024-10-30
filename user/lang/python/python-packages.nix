@@ -61,6 +61,7 @@
       pyparsing
       pyqt5
       pyqt5_sip
+      pyside6
       pyscard
       pythondialog
       pyxdg
