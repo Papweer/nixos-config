@@ -91,6 +91,7 @@
     git
     home-manager
     wpa_supplicant
+    font-awesome
     (pkgs.writeScriptBin "comma" ''
       if [ "$#" = 0 ]; then
         echo "usage: comma PKGNAME... [EXECUTABLE]";
