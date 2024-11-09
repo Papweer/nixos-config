@@ -54,7 +54,7 @@ in
             exec-once = nm-applet
             exec-once = blueman-applet
             exec-once = GOMAXPROCS=1 syncthing --no-browser
-            exec-once = protonmail-bridge --noninteractive
+            #exec-once = protonmail-bridge --noninteractive
             exec-once = waybar
 
             exec-once = hypridle
@@ -108,7 +108,7 @@ in
                         gap_size = 5
                         bg_col = rgb(''+config.lib.stylix.colors.base00+'')
                         workspace_method = first 1 # [center/first] [workspace] e.g. first 1 or center m+1
-                        enable_gesture = false # laptop touchpad
+                        enable_gesture = true # laptop touchpad
                 }
                 touch_gestures {
                         sensitivity = 4.0
@@ -152,12 +152,12 @@ in
             bind=SUPERSHIFT,K,exec,hyprctl kill
             bind=SUPER,W,exec,nwg-dock-wrapper
 
-            bind=,code:172,exec,lollypop -t
-            bind=,code:208,exec,lollypop -t
-            bind=,code:209,exec,lollypop -t
-            bind=,code:174,exec,lollypop -s
-            bind=,code:171,exec,lollypop -n
-            bind=,code:173,exec,lollypop -p
+            #bind=,code:172,exec,lollypop -t
+            #bind=,code:208,exec,lollypop -t
+            #bind=,code:209,exec,lollypop -t
+            #bind=,code:174,exec,lollypop -s
+            #bind=,code:171,exec,lollypop -n
+            #bind=,code:173,exec,lollypop -p
 
             bind = SUPER,R,pass,^(com\.obsproject\.Studio)$
             bind = SUPERSHIFT,R,pass,^(com\.obsproject\.Studio)$
@@ -167,8 +167,6 @@ in
             bind=SUPER,A,exec,'' + userSettings.spawnEditor + ''
 
             bind=SUPER,S,exec,'' + userSettings.spawnBrowser + ''
-
-            bind=SUPERCTRL,S,exec,container-open # qutebrowser only
 
             bind=SUPERCTRL,R,exec,phoenix refresh
 
@@ -204,21 +202,21 @@ in
             bind=,code:237,exec,brightnessctl --device='asus::kbd_backlight' set 1-
             bind=,code:238,exec,brightnessctl --device='asus::kbd_backlight' set +1
             bind=,code:255,exec,airplane-mode
-            bind=SUPER,C,exec,wl-copy $(hyprpicker)
+            bind=SUPERSHIFT,C,exec,wl-copy $(hyprpicker)
 
             bind=SUPERSHIFT,S,exec,systemctl suspend
             bindl=,switch:on:Lid Switch,exec,loginctl lock-session
-            bind=SUPERCTRL,L,exec,loginctl lock-session
+            bind=SUPER,L,exec,loginctl lock-session
 
-            bind=SUPER,H,movefocus,l
-            bind=SUPER,J,movefocus,d
-            bind=SUPER,K,movefocus,u
-            bind=SUPER,L,movefocus,r
+            bind=SUPER,Left,movefocus,l
+            bind=SUPER,Down,movefocus,d
+            bind=SUPER,Up,movefocus,u
+            bind=SUPER,Right!W,movefocus,r
 
-            bind=SUPERSHIFT,H,movewindow,l
-            bind=SUPERSHIFT,J,movewindow,d
-            bind=SUPERSHIFT,K,movewindow,u
-            bind=SUPERSHIFT,L,movewindow,r
+            bind=SUPERSHIFT,Left,movewindow,l
+            bind=SUPERSHIFT,Down,movewindow,d
+            bind=SUPERSHIFT,Up,movewindow,u
+            bind=SUPERSHIFT,Right,movewindow,r
 
             bind=SUPER,1,focusworkspaceoncurrentmonitor,1
             bind=SUPER,2,focusworkspaceoncurrentmonitor,2
@@ -532,15 +530,7 @@ in
             #!/bin/sh
             if pgrep -x nixos-rebuild > /dev/null || pgrep -x home-manager > /dev/null || pgrep -x kdenlive > /dev/null || pgrep -x FL64.exe > /dev/null || pgrep -x blender > /dev/null || pgrep -x flatpak > /dev/null;
             then echo "Shouldn't suspend"; sleep 10; else echo "Should suspend"; systemctl suspend; fi
-        '')
-        (pkgs.makeDesktopItem {
-            name = "emacsclientnewframe";
-            desktopName = "Emacs Client New Frame";
-            exec = "emacsclient -c -a emacs";
-            terminal = false;
-            icon = "emacs";
-            type = "Application";
-        })])
+        '')])
     ++
     (with pkgs-hyprland; [ ])
     ++ (with pkgs-nwg-dock-hyprland; [
@@ -591,9 +581,7 @@ in
     home.file.".config/nwg-dock-pinned".text = ''
         nwggrid
         Alacritty
-        emacsclientnewframe
-        qutebrowser
-        brave-browser
+        zen-browser
         writer
         impress
         calc
@@ -633,91 +621,72 @@ in
         }
     '';
     home.file.".config/hypr/hyprlock.conf".text = ''
-        background {
-            monitor =
-            path = screenshot
+    background {
+        path = ''+config.stylix.image+''
+        blur_passes = 2
+        blur_size = 5
+        vibrancy = 0.1696
+        brightness = 0.5
+    }
+    # TIME
+    label {
+        monitor = 
+        text = cmd[update:1000] echo "$(date +"%R")"
+        color = $foreground
+        font_size = 100
+        font_family = JetBrainsMono Nerd Font ExtraBold
+        position = 0, 400
+        halign = center
+        valign = center
+    }
 
-            # all these options are taken from hyprland, see https://wiki.hyprland.org/Configuring/Variables/#blur for explanations
-            blur_passes = 4
-            blur_size = 5
-            noise = 0.0117
-            contrast = 0.8916
-            brightness = 0.8172
-            vibrancy = 0.1696
-            vibrancy_darkness = 0.0
-        }
+    # DATE
+    label {
+        monitor =
+        text = cmd[update:1000] echo "$(date +"%a, %d %b")"
+        color = $foreground
+        font_size = 22
+        font_family = JetBrainsMono Nerd Font Bold
+        position = 0, 300
+        halign = center
+        valign = center
+    }
 
-        # doesn't work yet
-        image {
-            monitor =
-            path = /home/emmet/.dotfiles/user/wm/hyprland/nix-dark.png
-            size = 150 # lesser side if not 1:1 ratio
-            rounding = -1 # negative values mean circle
-            border_size = 0
-            rotate = 0 # degrees, counter-clockwise
+    # UPTIME
+    label {
+        monitor =
+        text = cmd[update:1000] echo "$(uptime -p | sed "s/u/U/")"
+        #Should Try just hex instead of this mess
+        color = rgb(''+config.lib.stylix.colors.base05+'')
+        font_size = 14
+        font_family = ''+userSettings.font+''
+        position = 0, -500
+        halign = center
+        valign = center
+    }
 
-            position = 0, 200
-            halign = center
-            valign = center
-        }
-
-        input-field {
-            monitor =
-            size = 200, 50
-            outline_thickness = 3
-            dots_size = 0.33 # Scale of input-field height, 0.2 - 0.8
-            dots_spacing = 0.15 # Scale of dots' absolute size, 0.0 - 1.0
-            dots_center = false
-            dots_rounding = -1 # -1 default circle, -2 follow input-field rounding
-            outer_color = rgb(''+config.lib.stylix.colors.base07-rgb-r+'',''+config.lib.stylix.colors.base07-rgb-g+'', ''+config.lib.stylix.colors.base07-rgb-b+'')
-            inner_color = rgb(''+config.lib.stylix.colors.base00-rgb-r+'',''+config.lib.stylix.colors.base00-rgb-g+'', ''+config.lib.stylix.colors.base00-rgb-b+'')
-            font_color = rgb(''+config.lib.stylix.colors.base07-rgb-r+'',''+config.lib.stylix.colors.base07-rgb-g+'', ''+config.lib.stylix.colors.base07-rgb-b+'')
-            fade_on_empty = true
-            fade_timeout = 1000 # Milliseconds before fade_on_empty is triggered.
-            placeholder_text = <i>Input Password...</i> # Text rendered in the input box when it's empty.
-            hide_input = false
-            rounding = -1 # -1 means complete rounding (circle/oval)
-            check_color = rgb(''+config.lib.stylix.colors.base0A-rgb-r+'',''+config.lib.stylix.colors.base0A-rgb-g+'', ''+config.lib.stylix.colors.base0A-rgb-b+'')
-            fail_color = rgb(''+config.lib.stylix.colors.base08-rgb-r+'',''+config.lib.stylix.colors.base08-rgb-g+'', ''+config.lib.stylix.colors.base08-rgb-b+'')
-            fail_text = <i>$FAIL <b>($ATTEMPTS)</b></i> # can be set to empty
-            fail_transition = 300 # transition time in ms between normal outer_color and fail_color
-            capslock_color = -1
-            numlock_color = -1
-            bothlock_color = -1 # when both locks are active. -1 means don't change outer color (same for above)
-            invert_numlock = false # change color if numlock is off
-            swap_font_color = false # see below
-
-            position = 0, -20
-            halign = center
-            valign = center
-        }
-
-        label {
-            monitor =
-            text = Hello, Emmet
-            color = rgb(''+config.lib.stylix.colors.base07-rgb-r+'',''+config.lib.stylix.colors.base07-rgb-g+'', ''+config.lib.stylix.colors.base07-rgb-b+'')
-            font_size = 25
-            font_family = ''+userSettings.font+''
-
-            rotate = 0 # degrees, counter-clockwise
-
-            position = 0, 160
-            halign = center
-            valign = center
-        }
-
-        label {
-            monitor =
-            text = $TIME
-            color = rgb(''+config.lib.stylix.colors.base07-rgb-r+'',''+config.lib.stylix.colors.base07-rgb-g+'', ''+config.lib.stylix.colors.base07-rgb-b+'')
-            font_size = 20
-            font_family = Intel One Mono
-            rotate = 0 # degrees, counter-clockwise
-
-            position = 0, 80
-            halign = center
-            valign = center
-        }
+    input-field {
+        size = 200, 50
+        outline_thickness = 2
+        dots_size = 0.25
+        dots_spacing = 0.15
+        dots_center = true
+        dots_rounding = -1 # -1 default circle, -2 follow input-field rounding
+        outer_color = rgb(''+config.lib.stylix.colors.base05+'')
+        inner_color = rgb(''+config.lib.stylix.colors.base00+'')
+        font_color = rgb(''+config.lib.stylix.colors.base05+'')
+        fade_on_empty = true
+        fade_timeout = 1500 # Milliseconds before fade_on_empty is triggered.
+        font_family = ''+userSettings.font+''
+        placeholder_text = <i>Enter Password...</i> # Text rendered in the input box when it's empty.
+        hide_input = false
+        rounding = 15
+        check_color = rgb(''+config.lib.stylix.colors.base02+'')
+        fail_color = rgb(''+config.lib.stylix.colors.base08+'') # if authentication failed, changes outer_color and fail message color
+        fail_text = <i>$FAIL <b>($ATTEMPTS)</b></i> # can be set to empty
+        fail_timeout = 2000 # milliseconds before fail_text and fail_color disappears
+        fail_transition = 200 # transition time in ms between normal outer_color and fail_color
+    }
     '';
     services.swayosd.enable = true;
     services.swayosd.topMargin = 0.5;
@@ -733,247 +702,222 @@ in
         });
         settings = {
             mainBar = {
-                layer = "top";
-                position = "top";
-                height = 30;
-                margin = "7 7 3 7";
-                spacing = 2;
-
-                modules-left = [ "group/power" "group/battery" "group/backlight" "group/cpu" "group/memory" "group/pulseaudio" "keyboard-state" ];
-                modules-center = [ "custom/hyprprofile" "hyprland/workspaces" ];
-                modules-right = [ "group/time" "idle_inhibitor" "tray" ];
-
-                "custom/os" = {
-                    "format" = " {} ";
-                    "exec" = ''echo "" '';
-                    "interval" = "once";
-                    "on-click" = "nwggrid-wrapper";
-                    "tooltip" = false;
+                "font" = "";
+                "reload_style_on_change" = true;
+                "height" = 30; # Waybar height
+                "spacing" = 7; # Gaps between modules (4px)
+                "modules-left" = [ "group/quicklinks-left" "wlr/taskbar" "hyprland/window" ];
+                "modules-center" = [ "hyprland/workspaces" ];
+                "modules-right" = [ "mpd" "network" "pulseaudio" "group/hardware" "clock" "group/quicklinks-right" ];
+            
+                # Taskbar
+                "wlr/taskbar" = {
+                  "format" = "{icon}";
+                  "icon-size" = "20";
+                  "on-click" = "activate";
+                  "on-click-right" = "close";
+                  "tooltip-format" = "Go to {title}";
+                  "ignore-list" = [ "kitty" "kitty-scratchpad" ];
                 };
-                "group/power" = {
-                        "orientation" = "horizontal";
-                        "drawer" = {
-                                "transition-duration" = 500;
-                                "children-class" = "not-power";
-                                "transition-left-to-right" = true;
-                        };
-                        "modules" = [
-                                "custom/os"
-                                "custom/hyprprofileicon"
-                                "custom/lock"
-                                "custom/quit"
-                                "custom/power"
-                                "custom/reboot"
-                        ];
-                };
-                "custom/quit" = {
-                        "format" = "󰍃";
-                        "tooltip" = false;
-                        "on-click" = "hyprctl dispatch exit";
-                };
-                "custom/lock" = {
-                        "format" = "󰍁";
-                        "tooltip" = false;
-                        "on-click" = "hyprlock";
-                };
-                "custom/reboot" = {
-                        "format" = "󰜉";
-                        "tooltip" = false;
-                        "on-click" = "reboot";
-                };
-                "custom/power" = {
-                        "format" = "󰐥";
-                        "tooltip" = false;
-                        "on-click" = "shutdown now";
-                };
-                "custom/hyprprofileicon" = {
-                    "format" = "󱙋";
-                    "on-click" = "hyprprofile-dmenu";
-                    "tooltip" = false;
-                };
-                "custom/hyprprofile" = {
-                    "format" = " {}";
-                    "exec" = ''cat ~/.hyprprofile'';
-                    "interval" = 3;
-                    "on-click" = "hyprprofile-dmenu";
-                };
-                "keyboard-state" = {
-                    "numlock" = true;
-                    "format" = "{icon}";
-                    "format-icons" = {
-                        "locked" = "󰎠 ";
-                        "unlocked" = "󱧓 ";
-                    };
-                };
+            
+                # Hyprland
                 "hyprland/workspaces" = {
-                    "format" = "{icon}";
-                    "format-icons" = {
-                        "1" = "󱚌";
-                        "2" = "󰖟";
-                        "3" = "";
-                        "4" = "󰎄";
-                        "5" = "󰋩";
-                        "6" = "";
-                        "7" = "󰄖";
-                        "8" = "󰑴";
-                        "9" = "󱎓";
-                        "scratch_term" = "_";
-                        "scratch_ranger" = "_󰴉";
-                        "scratch_music" = "_";
-                        "scratch_btm" = "_";
-                        "scratch_pavucontrol" = "_󰍰";
-                    };
-                    "on-click" = "activate";
-                    "on-scroll-up" = "hyprnome";
-                    "on-scroll-down" = "hyprnome --previous";
-                    "all-outputs" = false;
-                    "active-only" = false;
-                    "ignore-workspaces" = ["scratch" "-"];
-                    "show-special" = false;
+                  "disable-scroll" = true;
+                  "sort-by" = "number";
+                  "all-outputs" = true;
+                  "warp-on-scroll" = false;
+                  "format" = "{icon}";
+                  #"format-icons" = {
+                  #  "1" = " ";
+                  #  "2" = " ";
+                  #  "3" = " "
+                  #};
                 };
-
+                "hyprland/window" = {
+                  "format" = "{title}";
+                  "icon" = true;
+                  "icon-size" = 20;
+                  "max-length" = 30;
+                  "separate-outputs" = true;
+                };
+            
+                # Tray
+                "tray" = {
+                  "icon-size" = 21;
+                  "spacing" = 10;
+                };
+            
+                # Quicklinks
+                "group/quicklinks-left" = {
+                  "orientation" = "horizontal";
+                  "modules" = [ "image" "custom/settings" "custom/clipboard" ];
+                };
+                "image" = {
+                  "path" = "/home/hrigved/Pictures/Icons/arch.png";
+                  "on-click" = "~/.config/rofi/menus/drun.sh";
+                  "size" = 18;
+                };
+                "custom/settings" = {
+                  "format" = " ";
+                  "tooltip" = true;
+                  "tooltip-format" = "Open Settings!";
+                  "on-click" = "systemsettings";
+                };
+                "custom/clipboard" = {
+                  "format" = "󱘢 ";
+                  "tooltip" = true;
+                  "tooltip-format" = "Open Clipboard Manager!";
+                  "on-click" = "~/.config/rofi/menus/clipboard.sh";
+                };
+                #"custom/terminal" = {
+                #  "format" = " ";
+                #  "tooltip" = true;
+                #  "tooltip-format" = " Open Kitty!";
+                #  "on-click" = "kitty";
+                #};
+                #"custom/explorer" = {
+                #  "format" = " ";
+                #  "tooltip" = true;
+                #  "tooltip-format" = " Open Dolphin!";
+                #  "on-click" = "dolphin";
+                #};
+            
+                "group/quicklinks-right" = {
+                  "orientation" = "horizontal";
+                  "modules" = [ "idle_inhibitor" "custom/wallpaper" "custom/notification" "custom/power-menu" ];
+                };
                 "idle_inhibitor" = {
-                    format = "{icon}";
-                    format-icons = {
-                        activated = "󰅶";
-                        deactivated = "󰾪";
-                    };
+                  "format" = "{icon}";
+                  "format-icons" = {
+                    "activated" = " ";
+                    "deactivated" = " ";
+                  };
                 };
-                tray = {
-                    #"icon-size" = 21;
-                    "spacing" = 10;
+                #"group/power-menu" = {
+                #  "orientation" = "inherit";
+                #  "drawer" = {
+                #    "transition-duration" = 500;
+                #    "children-class" = "power-child";
+                #    "transition-left-to-right" = false;
+                #  };
+                #  "modules" = [ "custom/wlogout" "custom/reboot" "custom/quit" "custom/suspend" "custom/lock" ]; 
+                #};
+                "custom/power-menu" = {
+                  "format" = " ";
+                  "tooltip" = true;
+                  "tooltip-format" = " Open Wlogout!";
+                  "on-click" = "~/.config/hypr/scripts/power-menu.sh";
                 };
-                "clock#time" = {
-                    "interval" = 1;
-                    "format" = "{:%I:%M:%S %p}";
-                    "timezone" = "America/Chicago";
-                    "tooltip-format" = ''
-                        <big>{:%Y %B}</big>
-                        <tt><small>{calendar}</small></tt>'';
+                #"custom/lock" = {
+                #  "format" = " ";
+                #  "on-click" = "hyprlock";
+                #};
+                #"custom/quit" = {
+                #  "format" = "󰍃 ";
+                #  "on-click" = "hyprctl dispatch exit";
+                #};
+                #"custom/suspend" = {
+                #  "format" = "⏾ ";
+                #  "on-click" = "systemctl suspend";
+                #};
+                #"custom/reboot" = {
+                #  "format" = " ";
+                #  "on-click" = "systemctl reboot";
+                #};
+                "custom/wallpaper" = {
+                  "format" = " ";
+                  "tooltip" = true;
+                  "tooltip-format" = " Change Wallpaper!";
+                  "on-click" = "~/.config/rofi/menus/swww.sh";
                 };
-                "clock#date" = {
-                    "interval" = 1;
-                    "format" = "{:%a %Y-%m-%d}";
-                    "timezone" = "America/Chicago";
-                    "tooltip-format" = ''
-                        <big>{:%Y %B}</big>
-                        <tt><small>{calendar}</small></tt>'';
+                "custom/notification" = {
+                  "tooltip" = false;
+                  "format" = "{icon}";
+                  "format-icons" = {
+                    "notification" = "<span foreground='red'><sup></sup></span>";
+                    "none" = "";
+                    "dnd-notification" = "<span foreground='red'><sup></sup></span>";
+                    "dnd-none" = "";
+                    "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
+                    "inhibited-none" = "";
+                    "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
+                    "dnd-inhibited-none" = "";
+                  };
+                  "return-type" = "json";
+                  "exec-if" = "which swaync-client";
+                  "exec" = "swaync-client -swb";
+                  "on-click" = "swaync-client -t -sw";
+                  "on-click-right" = "swaync-client -d -sw";
+                  "escape" = true;
                 };
-                "group/time" = {
-                    "orientation" = "horizontal";
-                    "drawer" = {
-                        "transition-duration" = 500;
-                        "transition-left-to-right" = false;
-                    };
-                    "modules" = [ "clock#time" "clock#date" ];
+            
+                # Settings
+                "group/settings" = {
+                  "orientation" = "horizontal";
+                  "modules" = [];
                 };
-
-                cpu = { "format" = "󰍛"; };
-                "cpu#text" = { "format" = "{usage}%"; };
-                "group/cpu" = {
-                    "orientation" = "horizontal";
-                    "drawer" = {
-                        "transition-duration" = 500;
-                        "transition-left-to-right" = true;
-                    };
-                    "modules" = [ "cpu" "cpu#text" ];
+            
+                # Temperature
+                "temperature" = {
+                  "critical-threshold" = 80;
+                  "format" = "{temperatureC}°C {icon}";
+                  "hwmon-path-abs" = "/sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0/nvme/nvme0/hwmon1/temp1_input";
+                  "format-icons" = [ "" "" ""];
                 };
-
-                memory = { "format" = ""; };
-                "memory#text" = { "format" = "{}%"; };
-                "group/memory" = {
-                    "orientation" = "horizontal";
-                    "drawer" = {
-                        "transition-duration" = 500;
-                        "transition-left-to-right" = true;
-                    };
-                    "modules" = [ "memory" "memory#text" ];
+            
+                # Audio setup
+                "pulseaudio" = {
+                  "format" = "{volume}% {icon}";
+                  "format-bluetooth" = "{volume}% {icon} {format_source}";
+                  "format-bluetooth-muted" = " {icon} {format_source}";
+                  "format-muted" = "󰝟 {format_source}";
+                  "format-source" = "{volume}%";
+                  "format-source-muted" = "";
+                  "format-icons" = {
+                    "default" = [ "" " " " " ];
+                  };
+                  "max-volume" = 150;
+                  "on-click" = "pavucontrol";
                 };
-
-                backlight = {
-                    "format" = "{icon}";
-                    "format-icons" = [ "" "" "" "" "" "" "" "" "" ];
+            
+                # Network setup
+                "network" = {
+                  "format" = "{ifname}";
+                  "format-wifi" = "{essid} {bandwidthDownBytes}  ";
+                  "format-ethernet" = "{bandwidthDownBytes}  ";
+                  "format-disconnected" = "󱍢 No Internet";
+                  "tooltip-format" = "{ifname} via {gwaddr} 󰊗";
+                  "tooltip-format-wifi" = "{essid} ({signalStrength}%)  ";
+                  "tooltip-format-ethernet" = "{ifname}  ";
+                  "max-length" = 50;
+                  "interval" = 2;
                 };
-                "backlight#text" = { "format" = "{percent}%"; };
-                "group/backlight" = {
-                    "orientation" = "horizontal";
-                    "drawer" = {
-                        "transition-duration" = 500;
-                        "transition-left-to-right" = true;
-                    };
-                    "modules" = [ "backlight" "backlight#text" ];
+            
+                # Hardware info
+                "group/hardware" = {
+                  "orientation" = "horizontal";
+                  "modules" = [ "disk" "cpu" "memory" ];
                 };
-
-                battery = {
-                    "states" = {
-                        "good" = 75;
-                        "warning" = 30;
-                        "critical" = 15;
-                    };
-                    "fullat" = 80;
-                    "format" = "{icon}";
-                    "format-charging" = "󰂄";
-                    "format-plugged" = "󰂄";
-                    "format-full" = "󰁹";
-                    "format-icons" = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-                    "interval" = 10;
+                "disk" = {
+                  "format" = "{percentage_used}%  ";
+                  "path" = "/home";
                 };
-                "battery#text" = {
-                    "states" = {
-                        "good" = 75;
-                        "warning" = 30;
-                        "critical" = 15;
-                    };
-                    "fullat" = 80;
-                    "format" = "{capacity}%";
+                "cpu" = {
+                  "format" = " {usage}%  ";
+                  "tooltip" = false;
                 };
-                "group/battery" = {
-                    "orientation" = "horizontal";
-                    "drawer" = {
-                        "transition-duration" = 500;
-                        "transition-left-to-right" = true;
-                    };
-                    "modules" = [ "battery" "battery#text" ];
+                "memory" = {
+                  "format" = " {}%  ";
                 };
-                pulseaudio = {
-                    "scroll-step" = 1;
-                    "format" = "{icon}";
-                    "format-bluetooth" = "{icon}";
-                    "format-bluetooth-muted" = "󰸈";
-                    "format-muted" = "󰸈";
-                    "format-source" = "";
-                    "format-source-muted" = "";
-                    "format-icons" = {
-                        "headphone" = "";
-                        "hands-free" = "";
-                        "headset" = "";
-                        "phone" = "";
-                        "portable" = "";
-                        "car" = "";
-                        "default" = [ "" "" "" ];
-                    };
-                    "on-click" = "hyprctl dispatch togglespecialworkspace scratch_pavucontrol; if hyprctl clients | grep pavucontrol; then echo 'scratch_ranger respawn not needed'; else pavucontrol; fi";
-                };
-                "pulseaudio#text" = {
-                    "scroll-step" = 1;
-                    "format" = "{volume}%";
-                    "format-bluetooth" = "{volume}%";
-                    "format-bluetooth-muted" = "";
-                    "format-muted" = "";
-                    "format-source" = "{volume}%";
-                    "format-source-muted" = "";
-                    "on-click" = "hyprctl dispatch togglespecialworkspace scratch_pavucontrol; if hyprctl clients | grep pavucontrol; then echo 'scratch_ranger respawn not needed'; else pavucontrol; fi";
-                };
-                "group/pulseaudio" = {
-                    "orientation" = "horizontal";
-                    "drawer" = {
-                        "transition-duration" = 500;
-                        "transition-left-to-right" = true;
-                    };
-                    "modules" = [ "pulseaudio" "pulseaudio#text" ];
-                };
-            };
-        };
+            
+                # Clock
+                "clock" = {
+                    "timezone" = "Europe/London";
+                    "format" = "󱑂 {%a :%T}"; # Mon 19:28.10
+                    "tooltip-format" = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+                    "format-alt" = "󰨳 {:%d %b %Y}"; # 25 Dec 2006
+    };
+};
         style = ''
             * {
                     /* `otf-font-awesome` is required to be installed for icons */
